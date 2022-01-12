@@ -1,13 +1,10 @@
 from matplotlib.pyplot import plot, xlabel, ylabel, title, legend, \
                               savefig, rcParams
 from argparse import ArgumentParser
-from itertools import product
-from random import uniform
+from numpy.random import rand
 from numpy import array
 
 rcParams['text.usetex'] = True
-
-rand = lambda: uniform(0, 1)
 
 def update(x, y, alpha, beta, gamma, delta, dt=1e-5):
     dxdt = alpha * x - beta * x * y
@@ -35,16 +32,16 @@ if __name__ == '__main__':
     arguments = parser.parse_args()
 
     x, y = arguments.x0, arguments.y0
-    labels = [r'\alpha', r'\beta', r'\gamma', r'\delta']
+    labels = ['\\alpha', '\\beta', '\\gamma', '\\delta']
     for _ in range(arguments.n_plots):
-        alpha, beta, gamma, delta = rand(), rand(), rand(), rand()
-        d = dict(zip(labels, [alpha, beta, gamma, delta]))
-        label_str = ', '.join([f'{k}={v:.2f}' for k, v in d.items()])
+        d = dict(zip(labels, list(rand(4,))))
+        alpha, beta, gamma, delta = list(d.values())
+        label_str = ', '.join([f'${k}={v:.2f}$' for k, v in d.items()])
         sim = run_simulation(x, y, alpha, beta, gamma, delta)
         plot(sim[:,0], sim[:,1], label=label_str)
-    xlabel(r'x')
-    ylabel(r'y')
-    title(f'Lotka-Volterra Simulations where x_0={x} and y_0={y}')
+    xlabel('$x$')
+    ylabel('$y$')
+    title(f'Lotka-Volterra Simulations where $x_0={x}$ and $y_0={y}$')
     legend()
     savefig(f'lotka_volterra_x={x:.2f}_y={y:.2f}.png')
 
